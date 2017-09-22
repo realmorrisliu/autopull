@@ -31,8 +31,7 @@ except FileNotFoundError:
 
         CONFIG.write('username:{0}\npassword:{1}\nrepo:{2}\nproj:{3}\n'.format(username, password, repo, proj))
 
-g = Github(username, password)
-repo = g.get_user().get_repo(repo)
+repo = Github(username, password).get_user().get_repo(repo)
 os.chdir(proj)
 
 isUpToDate = True
@@ -42,7 +41,10 @@ try:
         with open('.git/HEAD', 'r') as HEAD:
             branchName = os.path.split(HEAD.readline().strip())[1]
 
-        branch = repo.get_branch(branchName)
+        try:
+            branch = repo.get_branch(branchName)
+        except TimeoutError:
+            repo = Github(username, password).get_user().get_repo(repo)
 
         if isUpToDate:
             sys.stdout.write("\r" + time.asctime(time.localtime(time.time())))
