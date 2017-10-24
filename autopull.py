@@ -33,7 +33,7 @@ except FileNotFoundError:
 os.chdir(proj)
 
 try:
-    isUpToDate = True
+    isUpToDate = False
     while True:
         with open('.git/HEAD', 'r') as HEAD:
             branchName = os.path.split(HEAD.readline().strip())[1]
